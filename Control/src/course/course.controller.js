@@ -118,13 +118,14 @@ export const courseDelete = async(req, res) =>{
         // Capturar el id del curso
         let { id } = req.params
         // Capturar al profesor
-        let { teacher} = req.body
+        let teacher = req.user
         // Ver si el curso existe
         let course = await Course.findOne({_id: id})
         if(!course) return res.status(404).send({message: 'Course not exists'})
         // Verificar que el teacher sea el dueño del curso
-        const user = await User.findOne({_id: teacher,role: 'TEACHER'})
-            if (!user || !course.teacher.equals(teacher)) {
+        console.log(teacher.id)
+        const user = await User.findOne({_id: teacher.id, role: 'TEACHER'})
+            if (!user || !course.teacher.equals(teacher.id)) {
                 return res.status(403).send({ message: 'You do not have permission to delete this course' });
             }
         //Eliminar
